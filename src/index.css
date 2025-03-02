@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap");
+@import "tailwindcss";
+
+@theme {
+	--font-sans: "Roboto Condensed", sans-serif;
+}
+
+@layer utilities {
+	@keyframes l8 {
+		to {
+			transform: perspective(300px) translateZ(180px);
+			opacity: 0;
+		}
+	}
+
+	.masthead__wrapper {
+		clip-path: polygon(0 0, 0 99%, 100% 95%, 100% 0);
+		transition: clip-path 0.25s ease-in;
+	}
+
+	.masthead__background {
+		@apply bg-neutral-600 text-white h-[290px] md:h-[400px] flex items-center justify-center;
+	}
+
+	.masthead__content {
+		@apply bg-neutral-900 text-white px-5 py-15;
+	}
+
+	.player__card__wrapper {
+		@apply flex flex-col;
+	}
+
+	.player__card__background {
+		@apply bg-neutral-600 text-white h-[170px] md:h-[210px] flex items-center justify-center after:bg-red-500 relative after:h-[4px] after:w-full after:absolute after:bottom-0 after:left-0 after:z-10;
+	}
+
+	.player__card__content {
+		@apply bg-neutral-900 text-white px-5 py-5 flex-1;
+	}
+}
