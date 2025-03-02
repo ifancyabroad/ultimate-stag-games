@@ -27,9 +27,14 @@ const Standings: React.FC = () => {
 
 	return (
 		<Layout>
+			<div className="title__wrapper">
+				<div className="title__content">
+					<h1 className="text-2xl md:text-4xl text-center font-medium uppercase mb-2">STANDINGS</h1>
+					<p className="text-center">See how the players are performing and who is leading the pack.</p>
+				</div>
+			</div>
 			<div className="p-5 md:py-10">
 				<div className="max-w-lg mx-auto">
-					<h1 className="text-2xl text-center font-bold mb-4">STANDINGS</h1>
 					<table className="min-w-full bg-white">
 						<colgroup>
 							<col style={{ width: "10%" }} />

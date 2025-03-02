@@ -25,9 +25,14 @@ const Players: React.FC = () => {
 
 	return (
 		<Layout>
+			<div className="title__wrapper">
+				<div className="title__content">
+					<h1 className="text-2xl md:text-4xl text-center font-medium uppercase mb-2">PLAYERS</h1>
+					<p className="text-center">Meet the players and see their key attributes.</p>
+				</div>
+			</div>
 			<div className="p-5 md:py-10">
 				<div className="max-w-6xl mx-auto">
-					<h1 className="text-2xl font-bold mb-4">PLAYERS</h1>
 					<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-2">
 						{players.map((player) => (
 							<PlayerCard key={player.id} {...player} />
