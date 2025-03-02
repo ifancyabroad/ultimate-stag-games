@@ -23,10 +23,12 @@ export const PlayerCard: React.FC<IPlayer> = (player) => {
 				<p className="text-xl">Image</p>
 			</div>
 			<div className="player__card__content">
-				<h3 className="text-sm font-medium uppercase tracking-wide mb-5">{name}</h3>
-				<p className="text-xs text-neutral-400 font-medium uppercase tracking-wide">
-					KEY ATTRIBUTE: {highestAttributeLabel}
-				</p>
+				<h3 className="text-sm font-medium uppercase tracking-wide">{name}</h3>
+				<div className="flex-1 flex flex-col justify-end">
+					<p className="text-xs text-neutral-400 font-medium uppercase tracking-wide">
+						KEY ATTRIBUTE: {highestAttributeLabel}
+					</p>
+				</div>
 			</div>
 		</Link>
 	);
