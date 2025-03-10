@@ -1,4 +1,9 @@
-import { Attribute } from "./enums";
+import { Attribute, Event } from "./enums";
+
+export interface IEvent {
+	points: number;
+	bonusPoints: number;
+}
 
 export interface IPlayer {
 	id: string;
@@ -8,5 +13,5 @@ export interface IPlayer {
 	attributes: Record<Attribute, number>;
 	power: string;
 	slug: string;
-	points: number;
+	events: Record<Event, IEvent>;
 }

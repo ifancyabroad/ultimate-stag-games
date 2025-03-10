@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { IPlayer } from "./types";
 
@@ -27,5 +27,14 @@ export const getPlayer = async (id: string) => {
 	} catch (error) {
 		console.error("Error getting player: ", error);
 		return null;
+	}
+};
+
+export const updatePlayer = async (id: string, data: Partial<IPlayer>) => {
+	try {
+		const playerDoc = doc(db, "players", id);
+		await setDoc(playerDoc, data, { merge: true });
+	} catch (error) {
+		console.error("Error updating player: ", error);
 	}
 };

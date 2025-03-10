@@ -5,3 +5,10 @@ export enum Attribute {
 	Integrity = "integrity",
 	Luck = "luck",
 }
+
+export enum Event {
+	Parkrun = "parkrun",
+	Axeperience = "axeperience",
+	BadMoon = "badMoon",
+	FourQuarters = "fourQuarters",
+}
