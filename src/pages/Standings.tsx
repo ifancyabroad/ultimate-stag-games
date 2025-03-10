@@ -1,54 +1,20 @@
-import { useEffect, useState } from "react";
-import { Layout } from "../components/Layout";
-import { IPlayer } from "../utils/types";
-import { getPlayers } from "../utils/database";
-import { PageLoader } from "../components/PageLoader";
+import { useContext, useState } from "react";
+import { Layout } from "common/components/Layout";
 import { Link } from "react-router";
-import { EVENT_LABEL_MAP, EVENTS } from "../utils/constants";
-import { Event } from "../utils/enums";
-import { ModalSubmit } from "../components/ModalSubmit";
+import { EVENT_LABEL_MAP, EVENTS } from "common/utils/constants";
+import { Event } from "common/utils/enums";
+import { ModalSubmit } from "common/components/ModalSubmit";
 import { Button } from "@headlessui/react";
 import clsx from "clsx";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../firebase";
+import { DataContext } from "common/context/DataContext";
+import { AuthContext } from "common/context/AuthContext";
 
 const Standings: React.FC = () => {
+	const user = useContext(AuthContext);
+	const players = useContext(DataContext);
 	const [isOpen, setIsOpen] = useState(false);
-	const [players, setPlayers] = useState<IPlayer[]>([]);
 	const [selectedEvent, setSelectedEvent] = useState<"overall" | Event>("overall");
-	const [isLoading, setIsLoading] = useState(true);
-	const isEventSelected = selectedEvent !== "overall";
-
-	useEffect(() => {
-		const unsub = onSnapshot(
-			collection(db, "players"),
-			(snapshot) => {
-				const data = snapshot.docs.map(
-					(doc) =>
-						({
-							id: doc.id,
-							...doc.data(),
-						}) as IPlayer,
-				);
-				setPlayers(data);
-			},
-			(error) => {
-				console.error("Error getting players: ", error);
-			},
-		);
-
-		return () => unsub();
-	}, []);
-
-	useEffect(() => {
-		const fetchPlayers = async () => {
-			const data = await getPlayers();
-			setPlayers(data);
-			setIsLoading(false);
-		};
-
-		fetchPlayers();
-	}, []);
+	const canSubmit = user && selectedEvent !== "overall";
 
 	const handleClose = () => {
 		setIsOpen(false);
@@ -84,10 +50,6 @@ const Standings: React.FC = () => {
 
 	const sortedPlayers = getSortedPlayers();
 
-	if (isLoading) {
-		return <PageLoader />;
-	}
-
 	return (
 		<Layout>
 			<div className="title__wrapper">
@@ -106,7 +68,7 @@ const Standings: React.FC = () => {
 									"w-full",
 									"appearance-none",
 									"rounded-md",
-									isEventSelected && "rounded-r-none",
+									canSubmit && "rounded-r-none",
 									"border",
 									"border-neutral-800",
 									"bg-white",
@@ -138,7 +100,7 @@ const Standings: React.FC = () => {
 							</div>
 						</div>
 
-						{isEventSelected && (
+						{canSubmit && (
 							<div className="flex justify-center">
 								<Button
 									onClick={handleOpen}
@@ -218,7 +180,7 @@ const Standings: React.FC = () => {
 				</div>
 			</div>
 
-			{isEventSelected && (
+			{canSubmit && (
 				<ModalSubmit isOpen={isOpen} handleClose={handleClose} event={selectedEvent} players={players} />
 			)}
 		</Layout>

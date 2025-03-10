@@ -12,3 +12,7 @@ export enum Event {
 	BadMoon = "badMoon",
 	FourQuarters = "fourQuarters",
 }
+
+export enum Modal {
+	Login = "login",
+}

@@ -1,6 +1,6 @@
 import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
-import { db } from "../firebase";
-import { IPlayer } from "./types";
+import { db } from "firebase";
+import { IPlayer } from "common/utils/types";
 
 export const getPlayers = async () => {
 	try {

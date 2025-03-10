@@ -1,9 +1,9 @@
 import { Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
-import { Event } from "../utils/enums";
-import { IPlayer } from "../utils/types";
-import { EVENT_LABEL_MAP } from "../utils/constants";
+import { Event } from "common/utils/enums";
+import { IPlayer } from "common/utils/types";
+import { EVENT_LABEL_MAP } from "common/utils/constants";
 import { useEffect, useState } from "react";
-import { updatePlayer } from "../utils/database";
+import { updatePlayer } from "common/utils/database";
 
 interface IFormEvent {
 	points: number;
@@ -84,45 +84,50 @@ export const ModalSubmit: React.FC<IProps> = ({ isOpen, handleClose, event, play
 					<DialogTitle className="font-bold">{EVENT_LABEL_MAP.get(event)}</DialogTitle>
 					<p>Please enter the results below:</p>
 
-					<form className="mt-4" onSubmit={submit}>
-						<div className="flex items-center gap-4 py-2">
-							<div className="flex-1" />
-							<div className="w-1/8">
-								<p className="text-sm/6 font-medium text-gray-900">Points</p>
+					<form onSubmit={submit}>
+						<div className="mb-4">
+							<div className="flex items-center gap-4 py-2">
+								<div className="flex-1" />
+								<div className="w-1/8">
+									<p className="text-sm/6 font-medium text-gray-900">Points</p>
+								</div>
+								<div className="w-1/8">
+									<p className="text-sm/6 font-medium text-gray-900">Bonus</p>
+								</div>
 							</div>
-							<div className="w-1/8">
-								<p className="text-sm/6 font-medium text-gray-900">Bonus</p>
-							</div>
+							{players.map((player) => (
+								<div key={player.id} className="flex items-center gap-4 border-t border-gray-200 py-2">
+									<div className="flex-1">
+										<label
+											htmlFor={player.id}
+											className="block text-sm/6 font-medium text-gray-900"
+										>
+											{player.shortName}
+										</label>
+									</div>
+									<div className="w-1/8">
+										<input
+											name={`${player.id}_points`}
+											type="number"
+											placeholder="0"
+											className="w-full text-right text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+											value={formValues[player.id].points}
+											onChange={(e) => handleChange(e, player.id, "points")}
+										/>
+									</div>
+									<div className="w-1/8">
+										<input
+											name={`${player.id}_bonusPoints`}
+											type="number"
+											placeholder="0"
+											className="w-full text-right text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+											value={formValues[player.id].bonusPoints}
+											onChange={(e) => handleChange(e, player.id, "bonusPoints")}
+										/>
+									</div>
+								</div>
+							))}
 						</div>
-						{players.map((player) => (
-							<div key={player.id} className="flex items-center gap-4 border-t border-gray-200 py-2">
-								<div className="flex-1">
-									<label htmlFor={player.id} className="block text-sm/6 font-medium text-gray-900">
-										{player.shortName}
-									</label>
-								</div>
-								<div className="w-1/8">
-									<input
-										name={`${player.id}_points`}
-										type="number"
-										placeholder="0"
-										className="w-full text-right text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-										value={formValues[player.id].points}
-										onChange={(e) => handleChange(e, player.id, "points")}
-									/>
-								</div>
-								<div className="w-1/8">
-									<input
-										name={`${player.id}_bonusPoints`}
-										type="number"
-										placeholder="0"
-										className="w-full text-right text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-										value={formValues[player.id].bonusPoints}
-										onChange={(e) => handleChange(e, player.id, "bonusPoints")}
-									/>
-								</div>
-							</div>
-						))}
 
 						<div className="flex justify-center gap-4">
 							<Button
