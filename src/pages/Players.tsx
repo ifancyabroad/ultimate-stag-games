@@ -16,7 +16,7 @@ const Players: React.FC = () => {
 			</div>
 			<div className="p-5 md:py-10">
 				<div className="mx-auto max-w-6xl">
-					<div className="grid grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-5">
+					<div className="grid grid-cols-1 gap-2 md:grid-cols-3">
 						{players.map((player) => (
 							<PlayerCard key={player.id} {...player} />
 						))}

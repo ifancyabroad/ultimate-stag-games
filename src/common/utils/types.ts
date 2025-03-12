@@ -5,13 +5,19 @@ export interface IEvent {
 	bonusPoints: number;
 }
 
+export interface IPower {
+	name: string;
+	description: string;
+}
+
 export interface IPlayer {
 	id: string;
 	name: string;
 	shortName: string;
 	description: string;
 	attributes: Record<Attribute, number>;
-	power: string;
+	power: IPower;
+	secretPower?: IPower;
 	slug: string;
 	events: Record<Event, IEvent>;
 }

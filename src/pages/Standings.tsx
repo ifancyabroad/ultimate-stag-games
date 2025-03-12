@@ -168,8 +168,8 @@ const Standings: React.FC = () => {
 						<div className="flex gap-2">
 							<p>3.</p>
 							<p>
-								Each player has a unique power that can be used to score additional points in each game.
-								Check profiles{" "}
+								Each player has a unique power and secret power that can be used to score additional
+								points in each game. Check profiles{" "}
 								<Link className="text-red-500 underline" to="/players">
 									here
 								</Link>{" "}

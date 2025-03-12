@@ -1,10 +1,62 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { ATTRIBUTE_COLOUR_MAP, ATTRIBUTE_LABEL_MAP, ATTRIBUTES } from "common/utils/constants";
-import { IPlayer } from "common/utils/types";
+import { IPlayer, IPower } from "common/utils/types";
 import { getPlayer } from "common/utils/database";
 import { useParams } from "react-router";
 import { Layout } from "common/components/Layout";
 import { PageLoader } from "common/components/PageLoader";
+import { ModalPassword } from "common/components/ModalPassword";
+
+interface IProps {
+	player: IPlayer;
+	secretPower: IPower;
+}
+
+const SecretPower: React.FC<IProps> = ({ player, secretPower }) => {
+	const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+	const [isSecretPowerVisible, setIsSecretPowerVisible] = useState(false);
+	const password = secretPower.name.replace(/\s/g, "").toLowerCase();
+	const isPasswordEntered = localStorage.getItem(player.id) === password;
+	const showSecretPower = isPasswordEntered || isSecretPowerVisible;
+
+	const handleOpenPasswordModal = () => {
+		setIsPasswordModalOpen(true);
+	};
+
+	const handleClosePasswordModal = () => {
+		setIsPasswordModalOpen(false);
+	};
+
+	const handlePasswordEntered = () => {
+		if (!player) {
+			return;
+		}
+		localStorage.setItem(player.id, password);
+		setIsSecretPowerVisible(true);
+	};
+
+	if (showSecretPower) {
+		return (
+			<p>
+				<strong>{secretPower.name}:</strong> {secretPower.description}
+			</p>
+		);
+	}
+
+	return (
+		<Fragment>
+			<button onClick={handleOpenPasswordModal} className="cursor-pointer font-medium text-red-900 underline">
+				View Secret Power
+			</button>
+			<ModalPassword
+				isOpen={isPasswordModalOpen}
+				password={password}
+				handleSuccess={handlePasswordEntered}
+				handleClose={handleClosePasswordModal}
+			/>
+		</Fragment>
+	);
+};
 
 const Player: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
@@ -33,7 +85,7 @@ const Player: React.FC = () => {
 		return null;
 	}
 
-	const { attributes, description, name } = player;
+	const { attributes, description, name, power, secretPower } = player;
 
 	return (
 		<Layout>
@@ -70,12 +122,11 @@ const Player: React.FC = () => {
 			</div>
 			<div className="p-5 md:py-10">
 				<div className="mx-auto max-w-xl">
-					<h2 className="mb-4 text-xl font-medium">POWER</h2>
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-						labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-						laboris nisi ut aliquip ex ea commodo consequat.
+					<h2 className="mb-4 text-xl font-medium">POWERS</h2>
+					<p className="mb-8">
+						<strong>{power.name}:</strong> {power.description}
 					</p>
+					{secretPower && <SecretPower player={player} secretPower={secretPower} />}
 				</div>
 			</div>
 		</Layout>
