@@ -39,11 +39,7 @@ export const Header: React.FC = () => {
 					</div>
 					<div className="flex flex-1 items-center justify-center sm:justify-between sm:gap-4">
 						<div className="flex shrink-0 items-center gap-2">
-							<img
-								alt="Your Company"
-								src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-								className="h-8 w-auto"
-							/>
+							<img alt="Ultimate Stag Games" src="/stag.svg" className="h-8 w-auto" />
 							<h4 className="font-bold">ULTIMATE STAG GAMES</h4>
 						</div>
 						<div className="hidden items-center sm:flex sm:gap-4">
