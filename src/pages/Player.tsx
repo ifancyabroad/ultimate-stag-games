@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { ATTRIBUTE_COLOUR_MAP, ATTRIBUTE_LABEL_MAP, ATTRIBUTES } from "common/utils/constants";
+import { ATTRIBUTE_COLOUR_MAP, ATTRIBUTE_LABEL_MAP, ATTRIBUTES, MAIN_IMAGES } from "common/utils/constants";
 import { IPlayer, IPower } from "common/utils/types";
 import { getPlayer } from "common/utils/database";
 import { useParams } from "react-router";
@@ -85,14 +85,18 @@ const Player: React.FC = () => {
 		return null;
 	}
 
-	const { attributes, description, name, power, secretPower } = player;
+	const { attributes, description, name, power, secretPower, shortName } = player;
+	const image = MAIN_IMAGES.get(shortName.toLowerCase());
 
 	return (
 		<Layout>
 			<div className="masthead__wrapper">
-				<div className="masthead__background">
-					<p className="text-4xl">Image</p>
-				</div>
+				<div
+					className="masthead__background"
+					style={{
+						backgroundImage: `url(${image})`,
+					}}
+				/>
 				<div className="masthead__content">
 					<div className="mx-auto max-w-xl">
 						<h1 className="mb-4 text-2xl font-medium uppercase">{name}</h1>
