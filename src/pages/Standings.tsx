@@ -176,6 +176,13 @@ const Standings: React.FC = () => {
 								for more information.
 							</p>
 						</div>
+						<div className="flex gap-2">
+							<p>4.</p>
+							<p>
+								There may be additional bonus points available throughout the day for certain activities
+								(e.g. Axeperience mini games)
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>

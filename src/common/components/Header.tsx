@@ -11,6 +11,7 @@ import { NavLink } from "react-router";
 const navigation = [
 	{ name: "Standings", href: "/" },
 	{ name: "Players", href: "/players" },
+	{ name: "Schedule", href: "/schedule" },
 ];
 
 export const Header: React.FC = () => {
