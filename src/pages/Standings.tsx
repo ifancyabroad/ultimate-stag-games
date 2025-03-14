@@ -183,6 +183,13 @@ const Standings: React.FC = () => {
 								(e.g. Axeperience mini games)
 							</p>
 						</div>
+						<div className="flex gap-2">
+							<p>5.</p>
+							<p>
+								The stag has the deciding vote on all tie breaks and the final say on any disputes over
+								ambiguous rules
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
