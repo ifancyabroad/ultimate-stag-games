@@ -10,6 +10,9 @@ import { DataContext } from "common/context/DataContext";
 import { AuthContext } from "common/context/AuthContext";
 import { ModalModifier } from "common/components/ModalModifier";
 import { IPlayer } from "common/utils/types";
+import { getBonusModifier } from "common/utils/helpers";
+import { ArrowUpOnSquareIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { updatePlayer } from "common/utils/database";
 
 const Standings: React.FC = () => {
 	const authContext = useContext(AuthContext);
@@ -17,8 +20,13 @@ const Standings: React.FC = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedEvent, setSelectedEvent] = useState<"overall" | Event>("overall");
 	const [selectedPlayer, setSelectedPlayer] = useState<IPlayer | null>(null);
-	const canSubmit = authContext?.user && authContext?.userData?.admin && selectedEvent !== "overall";
-	const canModify = authContext?.user && !authContext?.userData?.admin && selectedEvent !== "overall";
+	const isAdminUser = authContext?.user && authContext?.userData?.admin;
+	const isUser = authContext?.user && !authContext?.userData?.admin;
+	const canToggleModifiers = isAdminUser && selectedEvent === "overall";
+	const canSubmit = isAdminUser && selectedEvent !== "overall";
+	const canModify = isUser && selectedEvent !== "overall";
+	const bonusModifiersActive = players.some((player) => player.applyBonusModifers);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleClose = () => {
 		setIsOpen(false);
@@ -42,8 +50,35 @@ const Standings: React.FC = () => {
 		setSelectedEvent(event.target.value as "overall" | Event);
 	};
 
+	const handleApplyModifiers = async () => {
+		const promises = players.map((player) => {
+			return updatePlayer(player.id, {
+				...player,
+				applyBonusModifers: true,
+			});
+		});
+
+		setIsLoading(true);
+		await Promise.all(promises);
+		setIsLoading(false);
+	};
+
+	const handleRemoveModifiers = async () => {
+		const promises = players.map((player) => {
+			return updatePlayer(player.id, {
+				...player,
+				applyBonusModifers: false,
+			});
+		});
+
+		setIsLoading(true);
+		await Promise.all(promises);
+		setIsLoading(false);
+	};
+
 	const getSortedPlayers = () => {
-		const playersCopy = players.map(({ shortName, events, id }) => {
+		const playersCopy = players.map((player) => {
+			const { shortName, id, events, applyBonusModifers } = player;
 			let points: number;
 			let bonus: number;
 			let total: number;
@@ -51,12 +86,14 @@ const Standings: React.FC = () => {
 			if (selectedEvent === "overall") {
 				points = Object.values(events).reduce((acc, curr) => acc + curr.points, 0);
 				bonus = Object.values(events).reduce((acc, curr) => acc + curr.bonusPoints, 0);
-				bonusModifier = Object.values(events).reduce((acc, curr) => acc + curr.bonusPointsModifier, 0);
+				bonusModifier = applyBonusModifers
+					? Object.values(events).reduce((acc, curr) => acc + curr.bonusPointsModifier, 0)
+					: 0;
 				total = points + bonus + bonusModifier;
 			} else {
 				points = events[selectedEvent].points;
 				bonus = events[selectedEvent].bonusPoints;
-				bonusModifier = events[selectedEvent].bonusPointsModifier;
+				bonusModifier = getBonusModifier(player, selectedEvent);
 				total = points + bonus + bonusModifier;
 			}
 			return { shortName, id, points, bonus, bonusModifier, total };
@@ -85,7 +122,7 @@ const Standings: React.FC = () => {
 									"w-full",
 									"appearance-none",
 									"rounded-md",
-									canSubmit && "rounded-r-none",
+									isAdminUser && "rounded-r-none",
 									"border",
 									"border-neutral-800",
 									"bg-white",
@@ -116,14 +153,35 @@ const Standings: React.FC = () => {
 								</svg>
 							</div>
 						</div>
+						{canToggleModifiers && (
+							<div className="flex justify-center">
+								{bonusModifiersActive ? (
+									<Button
+										onClick={handleRemoveModifiers}
+										className="cursor-pointer rounded-r-md bg-red-800 px-4 py-2 text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-red-900 data-[open]:bg-red-800"
+										disabled={isLoading}
+									>
+										<XMarkIcon className="h-6 w-6" />
+									</Button>
+								) : (
+									<Button
+										onClick={handleApplyModifiers}
+										className="cursor-pointer rounded-r-md bg-green-600 px-4 py-2 text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-green-700 data-[open]:bg-green-600"
+										disabled={isLoading}
+									>
+										<CheckIcon className="h-6 w-6" />
+									</Button>
+								)}
+							</div>
+						)}
 
 						{canSubmit && (
 							<div className="flex justify-center">
 								<Button
 									onClick={handleOpen}
-									className="cursor-pointer rounded-r-md bg-blue-600 px-4 py-2 text-sm font-medium text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-blue-700 data-[open]:bg-blue-600"
+									className="cursor-pointer rounded-r-md bg-blue-600 px-4 py-2 text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-blue-700 data-[open]:bg-blue-600"
 								>
-									Submit Results
+									<ArrowUpOnSquareIcon className="h-6 w-6" />
 								</Button>
 							</div>
 						)}

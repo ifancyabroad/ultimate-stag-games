@@ -4,6 +4,7 @@ import { IPlayer } from "common/utils/types";
 import { EVENT_LABEL_MAP } from "common/utils/constants";
 import { useEffect, useState } from "react";
 import { updatePlayer } from "common/utils/database";
+import { getBonusModifier } from "common/utils/helpers";
 
 interface IFormEvent {
 	points: number;
@@ -23,7 +24,7 @@ const formatPlayers = (players: IPlayer[], event: Event) => {
 	return players.reduce((acc, player) => {
 		acc[player.id] = {
 			points: player.events[event].points,
-			bonusPoints: player.events[event].bonusPoints + player.events[event].bonusPointsModifier,
+			bonusPoints: player.events[event].bonusPoints + getBonusModifier(player, event),
 		};
 		return acc;
 	}, {} as IForm);
@@ -49,7 +50,7 @@ export const ModalSubmit: React.FC<IProps> = ({ isOpen, handleClose, event, play
 					...player.events,
 					[event]: {
 						points,
-						bonusPoints: bonusPoints - player.events[event].bonusPointsModifier,
+						bonusPoints: bonusPoints - getBonusModifier(player, event),
 					},
 				},
 			});
