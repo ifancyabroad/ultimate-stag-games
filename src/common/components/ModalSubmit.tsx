@@ -23,7 +23,7 @@ const formatPlayers = (players: IPlayer[], event: Event) => {
 	return players.reduce((acc, player) => {
 		acc[player.id] = {
 			points: player.events[event].points,
-			bonusPoints: player.events[event].bonusPoints,
+			bonusPoints: player.events[event].bonusPoints + player.events[event].bonusPointsModifier,
 		};
 		return acc;
 	}, {} as IForm);
@@ -49,7 +49,7 @@ export const ModalSubmit: React.FC<IProps> = ({ isOpen, handleClose, event, play
 					...player.events,
 					[event]: {
 						points,
-						bonusPoints,
+						bonusPoints: bonusPoints - player.events[event].bonusPointsModifier,
 					},
 				},
 			});

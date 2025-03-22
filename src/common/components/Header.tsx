@@ -15,7 +15,7 @@ const navigation = [
 ];
 
 export const Header: React.FC = () => {
-	const user = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
 	const { setModal } = useContext(ModalContext);
 
 	const onLogin = () => {
@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
 									{item.name}
 								</NavLink>
 							))}
-							{user ? (
+							{authContext?.user ? (
 								<Button onClick={onLogout} className="cursor-pointer hover:underline">
 									Logout
 								</Button>
@@ -79,7 +79,7 @@ export const Header: React.FC = () => {
 							{item.name}
 						</DisclosureButton>
 					))}
-					{user ? (
+					{authContext?.user ? (
 						<DisclosureButton onClick={onLogout} className="block cursor-pointer px-3 py-2 hover:underline">
 							Logout
 						</DisclosureButton>

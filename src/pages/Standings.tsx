@@ -8,13 +8,17 @@ import { Button } from "@headlessui/react";
 import clsx from "clsx";
 import { DataContext } from "common/context/DataContext";
 import { AuthContext } from "common/context/AuthContext";
+import { ModalModifier } from "common/components/ModalModifier";
+import { IPlayer } from "common/utils/types";
 
 const Standings: React.FC = () => {
-	const user = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
 	const players = useContext(DataContext);
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedEvent, setSelectedEvent] = useState<"overall" | Event>("overall");
-	const canSubmit = user && selectedEvent !== "overall";
+	const [selectedPlayer, setSelectedPlayer] = useState<IPlayer | null>(null);
+	const canSubmit = authContext?.user && authContext?.userData?.admin && selectedEvent !== "overall";
+	const canModify = authContext?.user && !authContext?.userData?.admin && selectedEvent !== "overall";
 
 	const handleClose = () => {
 		setIsOpen(false);
@@ -22,6 +26,16 @@ const Standings: React.FC = () => {
 
 	const handleOpen = () => {
 		setIsOpen(true);
+	};
+
+	const handleModifierOpen = (playerId: string) => {
+		if (!canModify) return;
+		const player = players.find((player) => player.id === playerId);
+		setSelectedPlayer(player || null);
+	};
+
+	const handleModifierClose = () => {
+		setSelectedPlayer(null);
 	};
 
 	const handleEventChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -33,16 +47,19 @@ const Standings: React.FC = () => {
 			let points: number;
 			let bonus: number;
 			let total: number;
+			let bonusModifier: number;
 			if (selectedEvent === "overall") {
 				points = Object.values(events).reduce((acc, curr) => acc + curr.points, 0);
 				bonus = Object.values(events).reduce((acc, curr) => acc + curr.bonusPoints, 0);
-				total = points + bonus;
+				bonusModifier = Object.values(events).reduce((acc, curr) => acc + curr.bonusPointsModifier, 0);
+				total = points + bonus + bonusModifier;
 			} else {
 				points = events[selectedEvent].points;
 				bonus = events[selectedEvent].bonusPoints;
-				total = points + bonus;
+				bonusModifier = events[selectedEvent].bonusPointsModifier;
+				total = points + bonus + bonusModifier;
 			}
-			return { shortName, id, points, bonus, total };
+			return { shortName, id, points, bonus, bonusModifier, total };
 		});
 		playersCopy.sort((a, b) => b.total - a.total);
 		return playersCopy;
@@ -134,7 +151,12 @@ const Standings: React.FC = () => {
 									<td className="border-b px-4 py-2">{index + 1}</td>
 									<td className="border-b px-4 py-2">{player.shortName}</td>
 									<td className="border-b px-4 py-2 text-end">{player.points}</td>
-									<td className="border-b px-4 py-2 text-end">{player.bonus}</td>
+									<td
+										className="border-b px-4 py-2 text-end"
+										onClick={() => handleModifierOpen(player.id)}
+									>
+										{player.bonus + player.bonusModifier}
+									</td>
 									<td className="border-b px-4 py-2 text-end">{player.total}</td>
 								</tr>
 							))}
@@ -196,6 +218,15 @@ const Standings: React.FC = () => {
 
 			{canSubmit && (
 				<ModalSubmit isOpen={isOpen} handleClose={handleClose} event={selectedEvent} players={players} />
+			)}
+
+			{canModify && selectedPlayer && (
+				<ModalModifier
+					isOpen={true}
+					handleClose={handleModifierClose}
+					event={selectedEvent}
+					player={selectedPlayer}
+				/>
 			)}
 		</Layout>
 	);

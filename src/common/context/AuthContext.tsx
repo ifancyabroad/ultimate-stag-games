@@ -1,4 +1,10 @@
 import React from "react";
 import { User } from "firebase/auth";
+import { IUserData } from "common/utils/types";
 
-export const AuthContext = React.createContext<User | null>(null);
+interface AuthContextProps {
+	user: User | null;
+	userData: IUserData | null;
+}
+
+export const AuthContext = React.createContext<AuthContextProps | null>(null);

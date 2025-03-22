@@ -3,6 +3,7 @@ import { Attribute, Event } from "./enums";
 export interface IEvent {
 	points: number;
 	bonusPoints: number;
+	bonusPointsModifier: number;
 }
 
 export interface IPower {
@@ -20,4 +21,8 @@ export interface IPlayer {
 	secretPower?: IPower;
 	slug: string;
 	events: Record<Event, IEvent>;
+}
+
+export interface IUserData {
+	admin: boolean;
 }
