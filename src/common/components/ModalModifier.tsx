@@ -4,6 +4,7 @@ import { IPlayer } from "common/utils/types";
 import { EVENT_LABEL_MAP } from "common/utils/constants";
 import { useState } from "react";
 import { updatePlayer } from "common/utils/database";
+import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 interface IProps {
 	isOpen: boolean;
@@ -18,9 +19,7 @@ export const ModalModifier: React.FC<IProps> = ({ isOpen, handleClose, event, pl
 	const [isLoading, setIsLoading] = useState(false);
 	const isDisabled = isLoading || isNaN(bonusPointsWithModifier);
 
-	const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-
+	const handleSubmit = async () => {
 		setIsLoading(true);
 
 		const bonusPointsModifier = bonusPointsWithModifier - player.events[event].bonusPoints;
@@ -40,9 +39,12 @@ export const ModalModifier: React.FC<IProps> = ({ isOpen, handleClose, event, pl
 		handleClose();
 	};
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.valueAsNumber;
-		setBonusPointsWithModifier(value);
+	const handleAdd = () => {
+		setBonusPointsWithModifier((prev) => prev + 1);
+	};
+
+	const handleSubtract = () => {
+		setBonusPointsWithModifier((prev) => prev - 1);
 	};
 
 	return (
@@ -50,39 +52,50 @@ export const ModalModifier: React.FC<IProps> = ({ isOpen, handleClose, event, pl
 			<DialogBackdrop className="fixed inset-0 bg-black/30" />
 
 			<div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-				<DialogPanel className="max-w-lg space-y-4 bg-white p-12">
+				<DialogPanel className="max-w-lg space-y-4 bg-white p-8">
 					<DialogTitle className="font-bold">{EVENT_LABEL_MAP.get(event)}</DialogTitle>
-					<p>Editing points for {player.shortName} :</p>
+					<p>
+						Editing points for <strong>{player.shortName}</strong>:
+					</p>
 
-					<form onSubmit={submit}>
-						<div className="mb-4">
-							<input
-								name={`${player.id}_bonusPoints`}
-								type="number"
-								placeholder="0"
-								className="w-full text-right text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-								value={bonusPointsWithModifier}
-								onChange={handleChange}
-								autoFocus
-							/>
-						</div>
-
-						<div className="flex justify-center gap-4">
+					<div className="mb-4">
+						<div className="flex items-stretch">
 							<Button
-								onClick={handleClose}
-								className="cursor-pointer rounded-md bg-gray-300 px-4 py-2 text-sm font-medium text-gray-800 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-gray-400 data-[open]:bg-gray-300"
+								type="button"
+								className="cursor-pointer rounded-l-md bg-gray-300 px-3 py-2 text-sm font-medium text-gray-800 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-gray-400"
+								onClick={handleSubtract}
 							>
-								Cancel
+								<MinusIcon className="h-5 w-5" />
 							</Button>
+							<div className="flex-1 bg-gray-100 px-3 py-2 text-center text-xl font-medium text-gray-800">
+								{bonusPointsWithModifier}
+							</div>
 							<Button
-								type="submit"
-								className="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-blue-700 data-[open]:bg-blue-600"
-								disabled={isDisabled}
+								type="button"
+								className="cursor-pointer rounded-r-md bg-gray-300 px-3 py-2 text-sm font-medium text-gray-800 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-gray-400"
+								onClick={handleAdd}
 							>
-								Submit
+								<PlusIcon className="h-5 w-5" />
 							</Button>
 						</div>
-					</form>
+					</div>
+
+					<div className="flex justify-center gap-4">
+						<Button
+							onClick={handleClose}
+							className="cursor-pointer rounded-md bg-gray-300 px-4 py-2 text-sm font-medium text-gray-800 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-gray-400 data-[open]:bg-gray-300"
+						>
+							Cancel
+						</Button>
+						<Button
+							type="button"
+							className="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-blue-700 data-[open]:bg-blue-600"
+							onClick={handleSubmit}
+							disabled={isDisabled}
+						>
+							Submit
+						</Button>
+					</div>
 				</DialogPanel>
 			</div>
 		</Dialog>

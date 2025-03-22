@@ -48,7 +48,7 @@ export const ModalPassword: React.FC<IProps> = ({ isOpen, password, handleSucces
 			<DialogBackdrop className="fixed inset-0 bg-black/30" />
 
 			<div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-				<DialogPanel className="max-w-lg space-y-4 bg-white p-12">
+				<DialogPanel className="max-w-lg space-y-4 bg-white p-8">
 					<DialogTitle className="font-bold">Password</DialogTitle>
 					<p>Please enter the password below:</p>
 
