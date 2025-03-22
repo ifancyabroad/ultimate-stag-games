@@ -157,19 +157,19 @@ const Standings: React.FC = () => {
 							<div className="flex justify-center">
 								{bonusModifiersActive ? (
 									<Button
-										onClick={handleRemoveModifiers}
-										className="cursor-pointer rounded-r-md bg-red-800 px-4 py-2 text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-red-900 data-[open]:bg-red-800"
-										disabled={isLoading}
-									>
-										<XMarkIcon className="h-6 w-6" />
-									</Button>
-								) : (
-									<Button
 										onClick={handleApplyModifiers}
 										className="cursor-pointer rounded-r-md bg-green-600 px-4 py-2 text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-green-700 data-[open]:bg-green-600"
 										disabled={isLoading}
 									>
 										<CheckIcon className="h-6 w-6" />
+									</Button>
+								) : (
+									<Button
+										onClick={handleRemoveModifiers}
+										className="cursor-pointer rounded-r-md bg-red-800 px-4 py-2 text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-red-900 data-[open]:bg-red-800"
+										disabled={isLoading}
+									>
+										<XMarkIcon className="h-6 w-6" />
 									</Button>
 								)}
 							</div>
