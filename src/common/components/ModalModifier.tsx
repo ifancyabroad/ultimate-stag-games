@@ -63,6 +63,7 @@ export const ModalModifier: React.FC<IProps> = ({ isOpen, handleClose, event, pl
 								className="w-full text-right text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
 								value={bonusPointsWithModifier}
 								onChange={handleChange}
+								autoFocus
 							/>
 						</div>
 
