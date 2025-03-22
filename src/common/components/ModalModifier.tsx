@@ -16,6 +16,7 @@ export const ModalModifier: React.FC<IProps> = ({ isOpen, handleClose, event, pl
 	const defaultValue = player.events[event].bonusPoints + player.events[event].bonusPointsModifier;
 	const [bonusPointsWithModifier, setBonusPointsWithModifier] = useState<number>(defaultValue);
 	const [isLoading, setIsLoading] = useState(false);
+	const isDisabled = isLoading || isNaN(bonusPointsWithModifier);
 
 	const submit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -75,7 +76,7 @@ export const ModalModifier: React.FC<IProps> = ({ isOpen, handleClose, event, pl
 							<Button
 								type="submit"
 								className="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-blue-700 data-[open]:bg-blue-600"
-								disabled={isLoading}
+								disabled={isDisabled}
 							>
 								Submit
 							</Button>
