@@ -12,6 +12,19 @@ const Schedule: React.FC = () => {
 			<div className="p-5 md:py-10">
 				<div className="mx-auto max-w-xl">
 					<div className="space-y-4">
+						<h2 className="mb-4 text-2xl font-bold underline underline-offset-4">FRIDAY 25th APRIL</h2>
+						<div>
+							<h3 className="mb-2 text-lg font-medium">8:15PM - 10:15PM</h3>
+							<h2 className="mb-2 text-xl font-bold text-red-900">Fifth Element</h2>
+							<p>
+								<strong>Description:</strong> Italian food, wine and cocktails.
+							</p>
+							<p>
+								<strong>Location:</strong> 1 Valentine Row, London SE1 8QW
+							</p>
+						</div>
+						<hr className="my-8 border-neutral-300" />
+						<h2 className="mb-4 text-2xl font-bold underline underline-offset-4">SATURDAY 26th APRIL</h2>
 						<div>
 							<h3 className="mb-2 text-lg font-medium">9:00AM - 10:00AM</h3>
 							<h2 className="mb-2 text-xl font-bold text-red-900">Parkrun</h2>
