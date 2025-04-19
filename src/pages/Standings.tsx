@@ -9,9 +9,9 @@ import clsx from "clsx";
 import { DataContext } from "common/context/DataContext";
 import { AuthContext } from "common/context/AuthContext";
 import { ModalModifier } from "common/components/ModalModifier";
-import { IPlayer } from "common/utils/types";
+import { IEvent, IPlayer } from "common/utils/types";
 import { getBonusModifier } from "common/utils/helpers";
-import { ArrowUpOnSquareIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { ArrowUpOnSquareIcon, ArrowUturnDownIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { updatePlayer } from "common/utils/database";
 
 const Standings: React.FC = () => {
@@ -25,7 +25,7 @@ const Standings: React.FC = () => {
 	const canToggleModifiers = isAdminUser && selectedEvent === "overall";
 	const canSubmit = isAdminUser && selectedEvent !== "overall";
 	const canModify = isUser && selectedEvent !== "overall";
-	const bonusModifiersActive = players.some((player) => player.applyBonusModifers);
+	const bonusModifiersActive = players.some((player) => player.applyBonusModifiers);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleClose = () => {
@@ -54,7 +54,7 @@ const Standings: React.FC = () => {
 		const promises = players.map((player) => {
 			return updatePlayer(player.id, {
 				...player,
-				applyBonusModifers: true,
+				applyBonusModifiers: true,
 			});
 		});
 
@@ -67,7 +67,35 @@ const Standings: React.FC = () => {
 		const promises = players.map((player) => {
 			return updatePlayer(player.id, {
 				...player,
-				applyBonusModifers: false,
+				applyBonusModifiers: false,
+			});
+		});
+
+		setIsLoading(true);
+		await Promise.all(promises);
+		setIsLoading(false);
+	};
+
+	const handleResetBonusPoints = async () => {
+		const promises = players.map((player) => {
+			const events = Object.keys(player.events).reduce(
+				(acc, event) => {
+					const eventKey = event as Event;
+					const eventData = player.events[eventKey];
+					return {
+						...acc,
+						[eventKey]: {
+							...eventData,
+							bonusPoints: 0,
+							bonusPointsModifier: 0,
+						},
+					};
+				},
+				{} as Record<Event, IEvent>,
+			);
+			return updatePlayer(player.id, {
+				...player,
+				events,
 			});
 		});
 
@@ -78,7 +106,7 @@ const Standings: React.FC = () => {
 
 	const getSortedPlayers = () => {
 		const playersCopy = players.map((player) => {
-			const { shortName, id, events, applyBonusModifers } = player;
+			const { shortName, id, events, applyBonusModifiers } = player;
 			let points: number;
 			let bonus: number;
 			let total: number;
@@ -86,7 +114,7 @@ const Standings: React.FC = () => {
 			if (selectedEvent === "overall") {
 				points = Object.values(events).reduce((acc, curr) => acc + curr.points, 0);
 				bonus = Object.values(events).reduce((acc, curr) => acc + curr.bonusPoints, 0);
-				bonusModifier = applyBonusModifers
+				bonusModifier = applyBonusModifiers
 					? Object.values(events).reduce((acc, curr) => acc + curr.bonusPointsModifier, 0)
 					: 0;
 				total = points + bonus + bonusModifier;
@@ -155,9 +183,16 @@ const Standings: React.FC = () => {
 						</div>
 						{canToggleModifiers && (
 							<div className="flex justify-center">
+								<Button
+									onClick={handleResetBonusPoints}
+									className="cursor-pointer bg-black px-4 py-2 text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-gray-800 data-[open]:bg-black"
+									disabled={isLoading}
+								>
+									<ArrowUturnDownIcon className="h-6 w-6" />
+								</Button>
 								{bonusModifiersActive ? (
 									<Button
-										onClick={handleApplyModifiers}
+										onClick={handleRemoveModifiers}
 										className="cursor-pointer rounded-r-md bg-green-600 px-4 py-2 text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-green-700 data-[open]:bg-green-600"
 										disabled={isLoading}
 									>
@@ -165,7 +200,7 @@ const Standings: React.FC = () => {
 									</Button>
 								) : (
 									<Button
-										onClick={handleRemoveModifiers}
+										onClick={handleApplyModifiers}
 										className="cursor-pointer rounded-r-md bg-red-800 px-4 py-2 text-white focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[hover]:bg-red-900 data-[open]:bg-red-800"
 										disabled={isLoading}
 									>

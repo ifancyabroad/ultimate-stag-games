@@ -21,7 +21,7 @@ export interface IPlayer {
 	secretPower?: IPower;
 	slug: string;
 	events: Record<Event, IEvent>;
-	applyBonusModifers: boolean;
+	applyBonusModifiers: boolean;
 }
 
 export interface IUserData {
