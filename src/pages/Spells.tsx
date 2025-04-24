@@ -67,7 +67,8 @@ const Spells: React.FC = () => {
 										Roll then apply the following formula to the result where gap is the number of
 										points difference in the overall table between you and the player ahead of you.
 									</p>
-									<p>floor(Gap × (D8 Roll ÷ 8))</p>
+									<p className="mb-2">floor(Gap × (D8 Roll ÷ 8))</p>
+									<p>*Note: The spell will have no effect if you are in first place.</p>
 								</td>
 							</tr>
 							<tr>
