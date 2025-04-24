@@ -48,9 +48,10 @@ const Spells: React.FC = () => {
 								<td className="border border-neutral-300 px-4 py-2">
 									<p className="mb-2">Roll then apply the result to the last spell that was cast.</p>
 									<ul className="mb-2 list-disc pl-5">
-										<li>1-2 = no effect</li>
-										<li>3-4 = cancel the spell</li>
-										<li>5-6 = cancel the spell or choose a new target for it if applicable</li>
+										<li>1 = no effect</li>
+										<li>2-3 = cancel the spell</li>
+										<li>4-5 = cancel the spell and reflect it back to the caster if applicable</li>
+										<li>6 = cancel the spell and cast it again yourself</li>
 									</ul>
 									<p>
 										*Note: The time to cast counterspell is immediately after the effects of the
@@ -60,12 +61,13 @@ const Spells: React.FC = () => {
 							</tr>
 							<tr>
 								<td className="border border-neutral-300 px-4 py-2">D8</td>
-								<td className="border border-neutral-300 px-4 py-2">Duel</td>
+								<td className="border border-neutral-300 px-4 py-2">Equalise</td>
 								<td className="border border-neutral-300 px-4 py-2">
-									Choose a target and an attribute. Both players must roll and add their attribute
-									score to the result. The player with the highest result wins. The winner gains 2
-									bonus points and the loser loses 2 bonus point. If the result is a tie, choose a
-									different attribute and roll again.
+									<p className="mb-2">
+										Roll then apply the following formula to the result where gap is the number of
+										points difference in the overall table between you and the player ahead of you.
+									</p>
+									<p>floor(Gap × (D8 Roll ÷ 8))</p>
 								</td>
 							</tr>
 							<tr>
@@ -118,19 +120,25 @@ const Spells: React.FC = () => {
 								<td className="border border-neutral-300 px-4 py-2">
 									<p className="mb-2">Roll:</p>
 									<ul className="mb-2 list-disc pl-5">
-										<li>1 = all bonus points reset to 0</li>
-										<li>2-3 = roll fireball for all players</li>
-										<li>4-5 = reveal your secret power to player of your choice (except Edgar)</li>
+										<li>1 = roll fireball for all players</li>
+										<li>2-3 = deduct a bonus point anytime a player uses a quote</li>
+										<li>4-5 = gain access to another user's power (except Edgar)</li>
 										<li>6-7 = choose a player to arm wrestle for 2 bonus points</li>
-										<li>8-9 = deduct a bonus point anytime a player uses a quote</li>
-										<li>10-11 = gain access to another user's power (except Edgar)</li>
 										<li>
-											12-13 = player with the most kills from 1 hero in Browser Heroes gains 2
+											8-9 = player with the most kills from 1 hero in Browser Heroes gains 2 bonus
+											points
+										</li>
+										<li>
+											10-11 = choose a human benchmark for all players to compete against for 2
 											bonus points
 										</li>
-										<li>14-15 = choose a player to reveal their secret power to you</li>
-										<li>16-17 = all spells are refreshed including Chaos</li>
-										<li>18-19 = roll amplify for all remaining events</li>
+										<li>12-13 = roll amplify for all remaining events</li>
+										<li>14-15 = roll equalise for all players starting with 2nd place</li>
+										<li>
+											16-17 = double all bonus points earned by all players until the end of the
+											event
+										</li>
+										<li>18-19 = all spells are refreshed including Chaos</li>
 										<li>20 = choose any effect from any dice and apply it</li>
 									</ul>
 									<p>*Note: If an effect is no longer applicable you must roll again.</p>
